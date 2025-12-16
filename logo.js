@@ -26,22 +26,24 @@ function startSpin() {
   spinning = true;
 
   // Spin-up (torque ramp)
+  const SPIN_ORIGIN = "75px 75px";
+
   gsap.to(spinner, {
     rotation: 270,
     duration: 0.5,
     ease: "power2.out",
-    transformOrigin: "50% 50%",
+    svgOrigin: SPIN_ORIGIN,
     onComplete: () => {
-      // Locked 45 RPM
       gsap.to(spinner, {
         rotation: "+=360",
-        duration: 360 / 270, // 1.333s per rotation
+        duration: 360 / 270,
         ease: "none",
         repeat: -1,
-        transformOrigin: "50% 50%"
+        svgOrigin: SPIN_ORIGIN
       });
     }
   });
+
 }
 
 // Desktop
