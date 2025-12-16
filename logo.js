@@ -1,9 +1,15 @@
-const playIcon = document.getElementById("center-play");
-const spinner = document.getElementById("spinner-ring");
-
+// ---- State ----
 let spinning = false;
 let spinTween = null;
+let brakeTween = null;
 
+// ---- Elements ----
+const playIcon = document.getElementById("center-play");
+const spinnerRing = document.getElementById("spinner-ring");
+
+const SPIN_ORIGIN = "75px 75px";
+
+// ---- Press animation (already working) ----
 function pressDown() {
   gsap.to(playIcon, {
     scale: 0.92,
@@ -22,82 +28,65 @@ function release() {
   });
 }
 
+// ---- Spin up ----
 function startSpin() {
   if (spinning) return;
+
   spinning = true;
 
-  spinTween = gsap.to("#spinner-ring", {
+  // Kill any brake in progress
+  if (brakeTween) {
+    brakeTween.kill();
+    brakeTween = null;
+  }
+
+  spinTween = gsap.to(spinnerRing, {
     rotation: "+=360",
     duration: 1,
     ease: "none",
     repeat: -1,
-    svgOrigin: "75px 75px"
+    svgOrigin: SPIN_ORIGIN
   });
-
-  // Spin-up (torque ramp)
-  const SPIN_ORIGIN = "75px 75px";
-
-  gsap.to(spinner, {
-    rotation: 270,
-    duration: 0.5,
-    ease: "power2.out",
-    svgOrigin: SPIN_ORIGIN,
-    onComplete: () => {
-      gsap.to(spinner, {
-        rotation: "+=360",
-        duration: 360 / 270,
-        ease: "none",
-        repeat: -1,
-        svgOrigin: SPIN_ORIGIN
-      });
-    }
-  });
-
 }
 
+// ---- Brake (the correct way) ----
 function stopSpin() {
   if (!spinning || !spinTween) return;
 
   spinning = false;
 
-  gsap.to(spinTween, {
-    timeScale: 0,
+  const proxy = { t: spinTween.timeScale() };
+
+  brakeTween = gsap.to(proxy, {
+    t: 0,
     duration: 0.6,
     ease: "power2.out",
+    onUpdate: () => {
+      spinTween.timeScale(proxy.t);
+    },
     onComplete: () => {
       spinTween.kill();
       spinTween = null;
+      brakeTween = null;
     }
   });
 }
 
-
-// Desktop
-playIcon.addEventListener("mousedown", pressDown);
-playIcon.addEventListener("mouseup", () => {
-  release();
-  startSpin();
-});
-
-// Mobile
-playIcon.addEventListener("touchstart", pressDown);
-playIcon.addEventListener("touchend", () => {
-  release();
-  startSpin();
-});
-
-// Logo interaction: spin only
+// ---- Toggle on logo click ----
 playIcon.addEventListener("click", () => {
+  pressDown();
+
   if (spinning) {
     stopSpin();
   } else {
     startSpin();
   }
+
+  setTimeout(release, 100);
 });
 
-// Download intent: spin + notify app
+// ---- Download intent ----
 document.addEventListener("playt:download", () => {
-  startSpin();
+  if (!spinning) startSpin();
   document.dispatchEvent(new Event("playt:play"));
 });
-
