@@ -15,8 +15,6 @@ body {
 
 #center-play {
   cursor: pointer;
-  transform-origin: 50% 50%;
-  transform-box: fill-box;
 }
 
 
