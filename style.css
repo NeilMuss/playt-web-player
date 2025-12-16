@@ -1,0 +1,19 @@
+body {
+  text-align: center;
+  font-family: system-ui, sans-serif;
+}
+
+#logo-container {
+  width: 200px;
+  margin: 2rem auto;
+}
+
+#spinner-ring {
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+}
+
+#center-play {
+  cursor: pointer;
+}
+
