@@ -2,6 +2,7 @@ const playIcon = document.getElementById("center-play");
 const spinner = document.getElementById("spinner-ring");
 
 let spinning = false;
+let spinTween = null;
 
 function pressDown() {
   gsap.to(playIcon, {
@@ -25,6 +26,14 @@ function startSpin() {
   if (spinning) return;
   spinning = true;
 
+  spinTween = gsap.to("#spinner-ring", {
+    rotation: "+=360",
+    duration: 1,
+    ease: "none",
+    repeat: -1,
+    svgOrigin: "75px 75px"
+  });
+
   // Spin-up (torque ramp)
   const SPIN_ORIGIN = "75px 75px";
 
@@ -46,6 +55,23 @@ function startSpin() {
 
 }
 
+function stopSpin() {
+  if (!spinning || !spinTween) return;
+
+  spinning = false;
+
+  gsap.to(spinTween, {
+    timeScale: 0,
+    duration: 0.6,
+    ease: "power2.out",
+    onComplete: () => {
+      spinTween.kill();
+      spinTween = null;
+    }
+  });
+}
+
+
 // Desktop
 playIcon.addEventListener("mousedown", pressDown);
 playIcon.addEventListener("mouseup", () => {
@@ -62,7 +88,11 @@ playIcon.addEventListener("touchend", () => {
 
 // Logo interaction: spin only
 playIcon.addEventListener("click", () => {
-  startSpin();
+  if (spinning) {
+    stopSpin();
+  } else {
+    startSpin();
+  }
 });
 
 // Download intent: spin + notify app
