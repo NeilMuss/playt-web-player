@@ -23,9 +23,10 @@ async function main() {
   playBtn.textContent = "Download Playt";
   playBtn.disabled = false;
 
-  playBtn.onclick = () => {
+  document.addEventListener("playt:play", () => {
     window.location.href = bootstrap.content.source.url;
-  };
+  });
+
 }
 
 main();
