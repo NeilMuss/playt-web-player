@@ -60,7 +60,14 @@ playIcon.addEventListener("touchend", () => {
   startSpin();
 });
 
-// Emit intent (do NOT navigate here)
+// Logo interaction: spin only
 playIcon.addEventListener("click", () => {
+  startSpin();
+});
+
+// Download intent: spin + notify app
+document.addEventListener("playt:download", () => {
+  startSpin();
   document.dispatchEvent(new Event("playt:play"));
 });
+

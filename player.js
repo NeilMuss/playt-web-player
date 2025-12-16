@@ -27,6 +27,15 @@ async function main() {
     window.location.href = bootstrap.content.source.url;
   });
 
+  const downloadBtn = document.getElementById("download");
+
+  downloadBtn.textContent = "Download Playt";
+  downloadBtn.disabled = false;
+
+  downloadBtn.onclick = () => {
+    document.dispatchEvent(new Event("playt:download"));
+  };
+
 }
 
 main();
