@@ -1,4 +1,12 @@
+console.log("player.js loaded");
+
+
 async function main() {
+  console.log("main() called");
+
+  if (window.__playt_initialized) return;
+  window.__playt_initialized = true;
+
   const params = new URLSearchParams(window.location.search);
   const id = params.get("c");
 
@@ -53,6 +61,7 @@ async function main() {
   console.log(trackListEl, trackListEl.tagName);
   console.log("before loop:", trackListEl.children.length);
 
+  trackListEl.innerHTML = "";
 
   function loadTrack(track) {
     trackTitle.textContent = track.title;
