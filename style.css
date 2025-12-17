@@ -26,3 +26,15 @@ body {
   margin: 0 auto;
 }
 
+#track-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem auto;
+  max-width: 320px;
+
+  /* ADD THESE */
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
