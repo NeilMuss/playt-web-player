@@ -75,13 +75,16 @@ async function main() {
 
   if (bootstrap.streaming && bootstrap.streaming.tracks.length > 0) {
     bootstrap.streaming.tracks.forEach((track, index) => {
+      console.log("title:", track.title);
       const li = document.createElement("li");
       li.textContent = `${track.track}. ${track.title}`;
       li.dataset.url = track.url;
 
       li.onclick = () => loadTrack(track);
 
+      console.log("full entry:", li);
       trackListEl.appendChild(li);
+      console.log("new list:", trackListEl);
 
       // load first track by default
       if (index === 0) {
