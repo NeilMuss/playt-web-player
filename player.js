@@ -47,22 +47,11 @@ async function main() {
     document.getElementById("art").src = bootstrap.artwork.url;
   }
 
-  // streaming
-  if (bootstrap.streaming && bootstrap.streaming.tracks.length > 0) {
-    const track = bootstrap.streaming.tracks[0];
-
-    document.getElementById("track-title").textContent = track.title;
-
-    const audio = document.getElementById("player");
-    audio.src = track.url;
-
-    // Safari requires user interaction
-    audio.load();
-  }
-
   const audio = document.getElementById("player");
   const trackTitle = document.getElementById("track-title");
   const trackListEl = document.getElementById("track-list");
+  console.log("before loop:", trackListEl.children.length);
+
 
   function loadTrack(track) {
     trackTitle.textContent = track.title;
@@ -91,6 +80,8 @@ async function main() {
       }
     });
   }
+
+  console.log("after loop:", trackListEl.children.length);
 
 
 }
