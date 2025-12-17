@@ -41,6 +41,25 @@ async function main() {
   document.addEventListener("playt:play", () => {
     window.location.href = bootstrap.content.source.url;
   });
+
+  // artwork
+  if (bootstrap.artwork && bootstrap.artwork.url) {
+    document.getElementById("art").src = bootstrap.artwork.url;
+  }
+
+  // streaming
+  if (bootstrap.streaming && bootstrap.streaming.tracks.length > 0) {
+    const track = bootstrap.streaming.tracks[0];
+
+    document.getElementById("track-title").textContent = track.title;
+
+    const audio = document.getElementById("player");
+    audio.src = track.url;
+
+    // Safari requires user interaction
+    audio.load();
+  }
+
 }
 
 main();
