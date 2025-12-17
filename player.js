@@ -50,6 +50,7 @@ async function main() {
   const audio = document.getElementById("player");
   const trackTitle = document.getElementById("track-title");
   const trackListEl = document.getElementById("track-list");
+  console.log(trackListEl, trackListEl.tagName);
   console.log("before loop:", trackListEl.children.length);
 
 
