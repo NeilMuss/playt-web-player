@@ -17,4 +17,12 @@ body {
   cursor: pointer;
 }
 
+#audio-container {
+  margin-top: 1rem;
+}
+
+#player {
+  display: block;
+  margin: 0 auto;
+}
 

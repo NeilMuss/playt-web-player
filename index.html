@@ -48,6 +48,31 @@
     #download:not(:disabled):active {
       transform: scale(0.96);
     }
+
+    #track-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem auto;
+      max-width: 320px;
+      text-align: left;
+    }
+
+    #track-list li {
+      padding: 0.6rem 0.8rem;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    #track-list li:hover {
+      background: #f2f2f2;
+    }
+
+    #track-list li.active {
+      background: #080605;
+      color: white;
+    }
+
+
   </style>
 
 
@@ -74,7 +99,11 @@
 <p id="artist"></p>
 <img id="art" style="max-width: 100%; height: auto;" />
 <h2 id="track-title"></h2>
-<audio id="player" controls></audio>
+<ul id="track-list"></ul>
+<div id="audio-container">
+  <audio id="player" controls></audio>
+</div>
+
 
 
 <button id="download" disabled>

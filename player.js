@@ -60,6 +60,39 @@ async function main() {
     audio.load();
   }
 
+  const audio = document.getElementById("player");
+  const trackTitle = document.getElementById("track-title");
+  const trackListEl = document.getElementById("track-list");
+
+  function loadTrack(track) {
+    trackTitle.textContent = track.title;
+    audio.src = track.url;
+    audio.load();
+
+    [...trackListEl.children].forEach(li =>
+      li.classList.toggle("active", li.dataset.url === track.url)
+    );
+  }
+
+  if (bootstrap.streaming && bootstrap.streaming.tracks.length > 0) {
+    bootstrap.streaming.tracks.forEach((track, index) => {
+      const li = document.createElement("li");
+      li.textContent = `${track.track}. ${track.title}`;
+      li.dataset.url = track.url;
+
+      li.onclick = () => loadTrack(track);
+
+      trackListEl.appendChild(li);
+
+      // load first track by default
+      if (index === 0) {
+        loadTrack(track);
+        li.classList.add("active");
+      }
+    });
+  }
+
+
 }
 
 main();
