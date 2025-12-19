@@ -86,13 +86,13 @@ playIcon.addEventListener("click", () => {
 });
 
 // ---- Animate logo when playing ----
-playIcon.addEventListener("playt:play", () => {
+document.addEventListener("playt:play", () => {
   pressDown();
   startSpin();
   setTimeout(release, 100);
 });
 
-playIcon.addEventListener("playt:pause", () => {
+document.addEventListener("playt:pause", () => {
   pressDown();
   stopSpin();
   setTimeout(release, 100);
