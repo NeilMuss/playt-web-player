@@ -107,18 +107,12 @@ async function main() {
   });
 
   audio.addEventListener("play", () => {
-    gsap.to("#spinner-ring", {
-      rotation: 360,
-      repeat: -1,
-      duration: 6,
-      ease: "linear"
-    });
+    document.dispatchEvent(new Event("playt:play"));
   });
 
   audio.addEventListener("pause", () => {
-    gsap.killTweensOf("#spinner-ring");
+    document.dispatchEvent(new Event("playt:pause"));
   });
-
 
 }
 

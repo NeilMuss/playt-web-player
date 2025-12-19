@@ -85,6 +85,19 @@ playIcon.addEventListener("click", () => {
   setTimeout(release, 100);
 });
 
+// ---- Animate logo when playing ----
+playIcon.addEventListener("playt:play", () => {
+  pressDown();
+  startSpin();
+  setTimeout(release, 100);
+});
+
+playIcon.addEventListener("playt:pause", () => {
+  pressDown();
+  stopSpin();
+  setTimeout(release, 100);
+});
+
 // ---- Download intent ----
 document.addEventListener("playt:download", () => {
   if (!spinning) startSpin();
