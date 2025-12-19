@@ -1,9 +1,4 @@
-console.log("player.js loaded");
-
-
 async function main() {
-  console.log("main() called");
-
   if (window.__playt_initialized) return;
   window.__playt_initialized = true;
 
@@ -58,12 +53,12 @@ async function main() {
   const audio = document.getElementById("player");
   const trackTitle = document.getElementById("track-title");
   const trackListEl = document.getElementById("track-list");
-  console.log(trackListEl, trackListEl.tagName);
-  console.log("before loop:", trackListEl.children.length);
-
   trackListEl.innerHTML = "";
 
-  function loadTrack(track) {
+  let currentTrackIndex = 0;
+
+  function loadTrack(track, index) {
+    currentTrackIndex = index;
     trackTitle.textContent = track.title;
     audio.src = track.url;
     audio.load();
@@ -75,26 +70,54 @@ async function main() {
 
   if (bootstrap.streaming && bootstrap.streaming.tracks.length > 0) {
     bootstrap.streaming.tracks.forEach((track, index) => {
-      console.log("title:", track.title);
       const li = document.createElement("li");
       li.textContent = `${track.track}. ${track.title}`;
       li.dataset.url = track.url;
 
-      li.onclick = () => loadTrack(track);
+      li.onclick = () => loadTrack(track, index);
 
-      console.log("full entry:", li);
       trackListEl.appendChild(li);
-      console.log("new list:", trackListEl);
 
       // load first track by default
       if (index === 0) {
-        loadTrack(track);
+        loadTrack(track, index);
         li.classList.add("active");
       }
+
     });
   }
 
-  console.log("after loop:", trackListEl.children.length);
+  audio.addEventListener("ended", () => {
+    const nextIndex = currentTrackIndex + 1;
+
+    if (nextIndex < bootstrap.streaming.tracks.length) {
+      loadTrack(bootstrap.streaming.tracks[nextIndex], nextIndex);
+      audio.play(); // user already interacted
+    }
+  });
+
+  const playButton = document.getElementById("center-play");
+
+  playButton.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  });
+
+  audio.addEventListener("play", () => {
+    gsap.to("#spinner-ring", {
+      rotation: 360,
+      repeat: -1,
+      duration: 6,
+      ease: "linear"
+    });
+  });
+
+  audio.addEventListener("pause", () => {
+    gsap.killTweensOf("#spinner-ring");
+  });
 
 
 }
