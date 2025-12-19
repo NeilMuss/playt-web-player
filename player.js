@@ -114,6 +114,25 @@ async function main() {
     document.dispatchEvent(new Event("playt:pause"));
   });
 
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+
+  function playIndex(index) {
+    const tracks = bootstrap.streaming.tracks;
+    if (index < 0 || index >= tracks.length) return;
+
+    loadTrack(tracks[index], index);
+    audio.play();
+  }
+
+  prevBtn.addEventListener("click", () => {
+    playIndex(currentTrackIndex - 1);
+  });
+
+  nextBtn.addEventListener("click", () => {
+    playIndex(currentTrackIndex + 1);
+  });
+
 }
 
 main();

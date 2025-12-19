@@ -72,6 +72,25 @@
       color: white;
     }
 
+    #controls {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    #controls button {
+      font-size: 1.4rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      border: none;
+      background: #eee;
+      cursor: pointer;
+    }
+
+    #controls button:active {
+      transform: scale(0.95);
+    }
 
   </style>
 
@@ -109,6 +128,11 @@
 <button id="download" disabled>
   Download Playt
 </button>
+
+<div id="controls">
+  <button id="prev">◀︎</button>
+  <button id="next">▶︎</button>
+</div>
 
 <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 <script src="logo.js"></script>
