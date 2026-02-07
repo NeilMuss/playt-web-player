@@ -8,9 +8,20 @@ async function main() {
   const previewBtn = document.getElementById("preview-browser");
   const audio = document.getElementById("player");
   const downloadNotice = document.getElementById("download-inline-notice");
+  let userChosePreview = false;
+  let userInteracted = false;
+  let deepLinkAttempted = false;
+  let deepLinkTimer = null;
 
   if (previewBtn) {
     previewBtn.onclick = () => {
+      userChosePreview = true;
+      userInteracted = true;
+      if (deepLinkTimer) {
+        clearTimeout(deepLinkTimer);
+        deepLinkTimer = null;
+      }
+
       const audioContainer = document.getElementById("audio-container");
       if (audioContainer) {
         audioContainer.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -39,8 +50,28 @@ async function main() {
     };
   }
 
-  // Single automatic attempt on page load.
-  window.location = deepLink;
+  const markInteracted = () => {
+    userInteracted = true;
+  };
+  window.addEventListener("pointerdown", markInteracted, { once: true });
+  window.addEventListener("touchstart", markInteracted, { once: true });
+  window.addEventListener("keydown", markInteracted, { once: true });
+
+  const isIOS = (() => {
+    const ua = navigator.userAgent || "";
+    const platform = navigator.platform || "";
+    const maxTouchPoints = navigator.maxTouchPoints || 0;
+    return /iPhone|iPad|iPod/.test(ua) || (platform === "MacIntel" && maxTouchPoints > 1);
+  })();
+
+  const maybeAutoAttemptDeepLink = () => {
+    if (!isIOS || deepLinkAttempted || userInteracted || userChosePreview) return;
+    deepLinkAttempted = true;
+    window.location = deepLink;
+  };
+
+  // Single automatic attempt on iOS if the user has not interacted.
+  deepLinkTimer = window.setTimeout(maybeAutoAttemptDeepLink, 500);
 
   const bootstrapUrl = `https://playt.info/c/${id}.json`;
 
