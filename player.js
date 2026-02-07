@@ -5,6 +5,20 @@ async function main() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("c");
   const openAppBtn = document.getElementById("open-app");
+  const previewBtn = document.getElementById("preview-browser");
+  const audio = document.getElementById("player");
+
+  if (previewBtn) {
+    previewBtn.onclick = () => {
+      const audioContainer = document.getElementById("audio-container");
+      if (audioContainer) {
+        audioContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      if (audio) {
+        audio.focus();
+      }
+    };
+  }
 
   // No cartridge ID present
   if (!id) {
@@ -47,7 +61,7 @@ async function main() {
 
   // Enable Download button
   const downloadBtn = document.getElementById("download");
-  downloadBtn.textContent = "Download Playt";
+  downloadBtn.textContent = "Download Full Playt (.playt)";
   downloadBtn.disabled = false;
 
   // Respond to explicit download intent
@@ -65,7 +79,6 @@ async function main() {
     document.getElementById("art").src = bootstrap.artwork.url;
   }
 
-  const audio = document.getElementById("player");
   const trackTitle = document.getElementById("track-title");
   const trackListEl = document.getElementById("track-list");
   trackListEl.innerHTML = "";
