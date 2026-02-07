@@ -7,6 +7,7 @@ async function main() {
   const openAppBtn = document.getElementById("open-app");
   const previewBtn = document.getElementById("preview-browser");
   const audio = document.getElementById("player");
+  const downloadNotice = document.getElementById("download-inline-notice");
 
   if (previewBtn) {
     previewBtn.onclick = () => {
@@ -52,27 +53,53 @@ async function main() {
     return;
   }
 
+  const previewTracks = Array.isArray(bootstrap?.streaming?.tracks)
+    ? bootstrap.streaming.tracks
+    : [];
+  const previewAvailable = previewTracks.length > 0;
+  const fullPlaytUrl = bootstrap?.content?.source?.url;
+  const fullPlaytAvailable = Boolean(fullPlaytUrl);
+
+  if (!previewAvailable && !fullPlaytAvailable) {
+    document.getElementById("title").textContent =
+      "Failed to load Playt";
+    return;
+  }
+
   // Populate metadata
   document.getElementById("title").textContent =
-    bootstrap.release.title;
+    bootstrap?.release?.title || "Playt";
 
   document.getElementById("artist").textContent =
-    bootstrap.release.artist;
+    bootstrap?.release?.artist || "";
 
   // Enable Download button
   const downloadBtn = document.getElementById("download");
   downloadBtn.textContent = "Download Full Playt (.playt)";
-  downloadBtn.disabled = false;
+  downloadBtn.disabled = !fullPlaytAvailable;
 
-  // Respond to explicit download intent
-  downloadBtn.onclick = () => {
-    document.dispatchEvent(new Event("playt:download"));
-  };
+  if (fullPlaytAvailable) {
+    if (downloadNotice) {
+      downloadNotice.style.display = "none";
+    }
+
+    // Respond to explicit download intent
+    downloadBtn.onclick = () => {
+      document.dispatchEvent(new Event("playt:download"));
+    };
+  } else {
+    downloadBtn.onclick = null;
+    if (downloadNotice) {
+      downloadNotice.style.display = "block";
+    }
+  }
 
   // Actual navigation happens here (logic layer)
-  document.addEventListener("playt:play", () => {
-    window.location.href = bootstrap.content.source.url;
-  });
+  if (fullPlaytAvailable) {
+    document.addEventListener("playt:play", () => {
+      window.location.href = fullPlaytUrl;
+    });
+  }
 
   // artwork
   if (bootstrap.artwork && bootstrap.artwork.url) {
@@ -96,8 +123,8 @@ async function main() {
     );
   }
 
-  if (bootstrap.streaming && bootstrap.streaming.tracks.length > 0) {
-    bootstrap.streaming.tracks.forEach((track, index) => {
+  if (previewAvailable) {
+    previewTracks.forEach((track, index) => {
       const li = document.createElement("li");
       li.textContent = `${track.track}. ${track.title}`;
       li.dataset.url = track.url;
@@ -118,8 +145,8 @@ async function main() {
   audio.addEventListener("ended", () => {
     const nextIndex = currentTrackIndex + 1;
 
-    if (nextIndex < bootstrap.streaming.tracks.length) {
-      loadTrack(bootstrap.streaming.tracks[nextIndex], nextIndex);
+    if (nextIndex < previewTracks.length) {
+      loadTrack(previewTracks[nextIndex], nextIndex);
       audio.play(); // user already interacted
     }
   });
@@ -146,7 +173,7 @@ async function main() {
   const nextBtn = document.getElementById("next");
 
   function playIndex(index) {
-    const tracks = bootstrap.streaming.tracks;
+    const tracks = previewTracks;
     if (index < 0 || index >= tracks.length) return;
 
     loadTrack(tracks[index], index);
