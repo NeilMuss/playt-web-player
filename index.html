@@ -40,6 +40,25 @@
       transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
 
+    #open-app {
+      display: none;
+      width: min(100%, 360px);
+      margin: 1.25rem auto 0;
+      padding: 1rem 1.4rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #080605;
+      color: white;
+      transition: transform 0.1s ease;
+    }
+
+    #open-app:active {
+      transform: scale(0.98);
+    }
+
     #download:disabled {
       opacity: 0.4;
       cursor: default;
@@ -132,6 +151,10 @@
   Download Playt
 </button>
 
+<button id="open-app" type="button">
+  Open in Playt App
+</button>
+
 <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 <script src="logo.js"></script>
 <script src="player.js"></script>
@@ -140,4 +163,3 @@
 </body>
 
 </html>
-

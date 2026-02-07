@@ -4,6 +4,7 @@ async function main() {
 
   const params = new URLSearchParams(window.location.search);
   const id = params.get("c");
+  const openAppBtn = document.getElementById("open-app");
 
   // No cartridge ID present
   if (!id) {
@@ -11,6 +12,20 @@ async function main() {
       "No Playt detected";
     return;
   }
+
+  const deepLink = `playt://load?c=${encodeURIComponent(id)}`;
+
+  // iOS may block automatic custom-scheme navigation unless user interacts.
+  // Show a clear fallback button that retries the deep link on tap.
+  if (openAppBtn) {
+    openAppBtn.style.display = "block";
+    openAppBtn.onclick = () => {
+      window.location = deepLink;
+    };
+  }
+
+  // Single automatic attempt on page load.
+  window.location = deepLink;
 
   const bootstrapUrl = `https://playt.info/c/${id}.json`;
 
